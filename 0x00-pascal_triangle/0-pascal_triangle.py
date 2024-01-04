@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+""" Module for pascal_triangle function """
+
+
 def pascal_triangle(n):
     if n <= 0:
         return []
@@ -15,10 +19,3 @@ def pascal_triangle(n):
         triangle.append(new_row)
 
     return triangle
-
-# Example usage
-if __name__ == "__main__":
-    triangle_result = pascal_triangle(5)
-    for row in triangle_result:
-        print(row)
-      
