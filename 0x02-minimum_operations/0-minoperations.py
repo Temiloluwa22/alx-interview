@@ -1,25 +1,30 @@
 #!/usr/bin/python3
+"""
+Mini Operations
+"""
+
+import math
+
+
+def factors(n):
+    """factors of n number"""
+    mylist = []
+    while n % 2 == 0:
+        mylist.append(2)
+        n = n / 2
+    for i in range(3, int(math.sqrt(n)) + 1, 2):
+        while n % i == 0:
+            mylist.append(i)
+            n = n / i
+    if n > 2:
+        mylist.append(n)
+    return mylist
+
+
 def minOperations(n):
-    if n <= 1:
+    """calculate the minimum operations"""
+    if type(n) != int or n < 2:
         return 0
-    
-    operations = 0
-    factor = 2
-    
-    while factor * factor <= n:
-        while n % factor == 0:
-            operations += factor
-            n //= factor
-        factor += 1
-    
-    if n > 1:
-        operations += n
-    
-    return operations
-
-# Example usage
-n1 = 4
-print("Min # of operations to reach {} char: {}".format(n1, minOperations(n1)))
-
-n2 = 12
-print("Min # of operations to reach {} char: {}".format(n2, minOperations(n2)))
+    else:
+        numOperations = sum(factors(n))
+        return int(numOperations)
