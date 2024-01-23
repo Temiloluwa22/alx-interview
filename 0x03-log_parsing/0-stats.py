@@ -1,38 +1,46 @@
 #!/usr/bin/python3
+
+""" script that reads stdin line by line and computes metrics: """
+
 import sys
-import signal
 
-def print_stats(total_size, status_codes):
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
 
-def signal_handler(sig, frame):
-    print_stats(total_size, status_codes)
-    sys.exit(0)
+def printStatus(dic, size):
+    """ Prints """
+    print("File size: {:d}".format(size))
+    for i in sorted(dic.keys()):
+        if dic[i] != 0:
+            print("{}: {:d}".format(i, dic[i]))
 
-signal.signal(signal.SIGINT, signal_handler)
 
-total_size = 0
-status_codes = {'200': 0, '301': 0, '400': 0, '401': 0, '403': 0, '404': 0, '405': 0, '500': 0}
-line_count = 0
+# sourcery skip: use-contextlib-suppress
+statusCodes = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0,
+               "404": 0, "405": 0, "500": 0}
+
+count = 0
+size = 0
 
 try:
     for line in sys.stdin:
-        parts = line.split()
-        if len(parts) >= 9:
-            ip, date, path, status, size = parts[:5]
-            if path == '"GET /projects/260 HTTP/1.1"':
-                total_size += int(size)
-                if status in status_codes:
-                    status_codes[status] += 1
-                line_count += 1
+        if count != 0 and count % 10 == 0:
+            printStatus(statusCodes, size)
 
-                if line_count % 10 == 0:
-                    print_stats(total_size, status_codes)
+        stlist = line.split()
+        count += 1
+
+        try:
+            size += int(stlist[-1])
+        except Exception:
+            pass
+
+        try:
+            if stlist[-2] in statusCodes:
+                statusCodes[stlist[-2]] += 1
+        except Exception:
+            pass
+    printStatus(statusCodes, size)
+
 
 except KeyboardInterrupt:
-    print_stats(total_size, status_codes)
-    sys.exit(0)
-  
+    printStatus(statusCodes, size)
+    raise
