@@ -1,45 +1,25 @@
 #!/usr/bin/python3
+"""Island perimeter computing module.
+"""
+
 
 def island_perimeter(grid):
-    """
-    Calculate the perimeter of the island described in grid.
-
-    Args:
-        grid (list of list of int): 2D grid where 0 represents water and 1 represents land.
-
-    Returns:
-        int: Perimeter of the island.
-
-    Raises:
-        None
+    """Computes the perimeter of an island with no lakes.
     """
     perimeter = 0
-
-    # Iterate through each cell in the grid
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            if grid[i][j] == 1:  # If it's land
-                perimeter += 4  # Each land cell contributes 4 to the perimeter
-
-                # Check neighbors and subtract 1 for each adjacent land cell
-                if i > 0 and grid[i - 1][j] == 1:
-                    perimeter -= 1
-                if i < len(grid) - 1 and grid[i + 1][j] == 1:
-                    perimeter -= 1
-                if j > 0 and grid[i][j - 1] == 1:
-                    perimeter -= 1
-                if j < len(grid[0]) - 1 and grid[i][j + 1] == 1:
-                    perimeter -= 1
-
+    if type(grid) != list:
+        return 0
+    n = len(grid)
+    for i, row in enumerate(grid):
+        m = len(row)
+        for j, cell in enumerate(row):
+            if cell == 0:
+                continue
+            edges = (
+                i == 0 or (len(grid[i - 1]) > j and grid[i - 1][j] == 0),
+                j == m - 1 or (m > j + 1 and row[j + 1] == 0),
+                i == n - 1 or (len(grid[i + 1]) > j and grid[i + 1][j] == 0),
+                j == 0 or row[j - 1] == 0,
+            )
+            perimeter += sum(edges)
     return perimeter
-
-if _name_ == "_main_":
-    # Example usage
-    grid = [
-        [0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [0, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0]
-    ]
-    print(island_perimeter(grid))
