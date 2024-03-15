@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Maria and Ben are playing a game"""
 
-
 def isWinner(x, nums):
     """x - number of rounds
     nums - numbers of list
@@ -40,3 +39,4 @@ def remove_multiples(ls, x):
             ls[j * x] = 0
         except (ValueError, IndexError):
             break
+            
